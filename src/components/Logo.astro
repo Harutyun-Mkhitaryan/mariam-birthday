@@ -1,0 +1,83 @@
+---
+/**
+ * Monogram as drawn in the mockups: Cormorant Garamond "M" in ivory
+ * with the gold quill flourish (header, desktop) — see 08-Desktop SVG → #Header.
+ */
+interface Props {
+  href?: string;
+  label?: string;
+  flourish?: boolean;
+  /** font-size of the "M" (desktop / mobile), in px — header 54 / 46, footer 56 / 44 */
+  size?: number;
+  mobileSize?: number;
+  class?: string;
+}
+const {
+  href = '#home',
+  label = 'Mariam — back to the top',
+  flourish = true,
+  size = 54,
+  mobileSize = 46,
+  class: className,
+} = Astro.props;
+---
+
+<a
+  class:list={['logo', className]}
+  href={href}
+  aria-label={label}
+  style={`--logo-size:${size}px;--logo-size-m:${mobileSize}px`}
+>
+  <svg class="logo__svg" viewBox="56 14 66 60" aria-hidden="true" focusable="false">
+    <text x="68" y="60" class="logo__m">M</text>
+    {flourish && <path class="logo__flourish" d="M62 68c21-19 22-36 36-50" />}
+  </svg>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-ivory);
+    text-decoration: none;
+    border-radius: 2px;
+    line-height: 0;
+  }
+  .logo__svg {
+    height: calc(var(--logo-size) * 60 / 54);
+    width: calc(var(--logo-size) * 66 / 54);
+    overflow: visible;
+  }
+  .logo__m {
+    font-family: var(--font-display);
+    font-size: 54px;
+    font-weight: 500;
+    fill: currentColor;
+  }
+  .logo__flourish {
+    fill: none;
+    stroke: var(--color-gold);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-dasharray: 80;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 900ms var(--ease-cinematic);
+  }
+  .logo:hover .logo__flourish {
+    animation: flourish-draw 1.1s var(--ease-cinematic);
+  }
+  @keyframes flourish-draw {
+    from { stroke-dashoffset: 80; }
+    to { stroke-dashoffset: 0; }
+  }
+  @media (max-width: 767px) {
+    .logo__svg {
+      height: calc(var(--logo-size-m) * 60 / 54);
+      width: calc(var(--logo-size-m) * 66 / 54);
+    }
+    .logo__flourish { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo:hover .logo__flourish { animation: none; }
+  }
+</style>

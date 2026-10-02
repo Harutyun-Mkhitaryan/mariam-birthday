@@ -1,0 +1,114 @@
+/*
+ * Mariam Birthday — design tokens
+ * Colour, font and spacing values are copied 1:1 from
+ * 01-Design-System/tokens.css + tokens.json (original kept as tokens.source.css).
+ * Type scale follows 01-Design-System/Text-Styles.csv and the 1440 / 390 mockups.
+ * Motion values follow 11-Animation-Spec/Animation-Spec.md.
+ */
+:root {
+  /* ── Colour (tokens.css) ─────────────────────────── */
+  --color-bg: #0B0806;
+  --color-bgSoft: #130D09;
+  --color-surface: #1B120D;
+  --color-surface2: #24170F;
+  --color-brown: #4A2B1A;
+  --color-bronze: #8A5632;
+  --color-gold: #C78949;
+  --color-champagne: #E4C19B;
+  --color-ivory: #F4E8D8;
+  --color-textMuted: #BBA58D;
+  --color-line: #6F4C32;
+  --color-paper: #E7D1B5;
+  --color-paperInk: #503729;
+  --color-white: #FFF8EF;
+  --color-footer: #080604; /* footer fill used in both mockups */
+
+  /* ── Fonts ────────────────────────────────────────── */
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-script: "Parisienne", "Brush Script MT", cursive;
+  --font-ui: "Montserrat", Arial, sans-serif;
+  /* Cormorant has no Armenian glyphs – the letter uses the closest classical serif that does. */
+  --font-letter: "Noto Serif Armenian", "Cormorant Garamond", "Times New Roman", serif;
+
+  /* ── Spacing (tokens.json) ────────────────────────── */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  --space-120: 120px;
+  --space-128: 128px;
+
+  --content-max: 1200px;
+  --frame-max: 1440px; /* desktop reference frame */
+  --space-section-desktop: 120px;
+  --space-section-mobile: 72px;
+  --hairline: 1px;
+  --radius-none: 0px;
+  --radius-pill: 999px;
+
+  /* ── Type scale (fluid between the 390 and 1440 frames) ── */
+  /* Display/H1 – hero "Happy Birthday," 52 → 88 */
+  --fs-hero: clamp(3.25rem, 2.414rem + 3.429vw, 5.5rem);
+  /* Script/Hero – "Mariam" 66 → 106 */
+  --fs-hero-script: clamp(4.125rem, 3.196rem + 3.81vw, 6.625rem);
+  /* Display/H2 – section titles 44 → 56 (Text-Styles.csv Display/H2 = 56 / -0.4) */
+  --fs-h2: clamp(2.75rem, 2.471rem + 1.143vw, 3.5rem);
+  --ls-h2: -0.4px;
+  /* Script/Signature 48 → 72 */
+  --fs-signature: clamp(3rem, 2.443rem + 2.286vw, 4.5rem);
+  /* Body/Large 16 → 21 */
+  --fs-lead: clamp(1rem, 0.8839rem + 0.4762vw, 1.3125rem);
+  /* Body/Regular 15 → 18 */
+  --fs-body: clamp(0.9375rem, 0.8679rem + 0.2857vw, 1.125rem);
+  /* Final wishes copy 15 → 20 */
+  --fs-wish: clamp(0.9375rem, 0.8214rem + 0.4762vw, 1.25rem);
+  /* UI */
+  --fs-nav: 0.75rem;       /* 12 / ls 2 */
+  --fs-button: 0.6875rem;  /* 11 / ls 1.2 */
+  --fs-caption: 0.6875rem; /* 11 / ls 3 */
+  --fs-eyebrow: clamp(0.625rem, 0.5786rem + 0.1905vw, 0.75rem); /* 10 → 12 */
+
+  /* ── Motion (Animation-Spec.md) ───────────────────── */
+  --ease-cinematic: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-hover: 180ms;
+  --dur-reveal: 700ms;
+  --dur-hero: 800ms;
+  --dur-mask: 900ms;
+  --dur-card: 650ms;
+  --dur-modal: 380ms;
+  --stagger-title: 110ms;
+  --stagger-card: 90ms;
+  --stagger-copy: 80ms;
+
+  /* ── Effects ──────────────────────────────────────── */
+  --glow-gold: 0 0 26px rgba(199, 137, 73, 0.22);
+  --header-h: 88px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-h: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-hover: 120ms;
+    --dur-reveal: 150ms;
+    --dur-hero: 150ms;
+    --dur-mask: 150ms;
+    --dur-card: 150ms;
+    --dur-modal: 150ms;
+    --stagger-title: 0ms;
+    --stagger-card: 0ms;
+    --stagger-copy: 0ms;
+  }
+}

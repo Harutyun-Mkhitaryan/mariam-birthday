@@ -1,0 +1,47 @@
+# Builds the Astro site and publishes it to GitHub Pages on every push.
+#
+# This file must live at   .github/workflows/deploy.yml   inside the project folder.
+# Create the two folders (".github", then "workflows" inside it) and move this file there
+# before publishing — see DEPLOY-GITHUB-PAGES.md, step 1.
+#
+# One-time setup in the repository: Settings → Pages → Source: "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v7
+      - name: Install, build and upload the site
+        uses: withastro/action@v6
+        # The site address (https://<user>.github.io/<repo>/) is detected in
+        # astro.config.mjs. For a custom domain add:
+        # env:
+        #   SITE_URL: https://your-domain.example
+        #   BASE_PATH: /
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

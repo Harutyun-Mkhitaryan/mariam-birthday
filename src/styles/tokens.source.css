@@ -1,0 +1,23 @@
+:root{
+  --color-bg: #0B0806;
+  --color-bgSoft: #130D09;
+  --color-surface: #1B120D;
+  --color-surface2: #24170F;
+  --color-brown: #4A2B1A;
+  --color-bronze: #8A5632;
+  --color-gold: #C78949;
+  --color-champagne: #E4C19B;
+  --color-ivory: #F4E8D8;
+  --color-textMuted: #BBA58D;
+  --color-line: #6F4C32;
+  --color-paper: #E7D1B5;
+  --color-paperInk: #503729;
+  --color-white: #FFF8EF;
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-script: "Parisienne", "Brush Script MT", cursive;
+  --font-ui: "Montserrat", Arial, sans-serif;
+  --content-max: 1200px;
+  --space-section-desktop: 120px;
+  --space-section-mobile: 72px;
+  --hairline: 1px;
+}

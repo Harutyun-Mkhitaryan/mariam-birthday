@@ -1,0 +1,70 @@
+---
+/**
+ * Art-directed <picture>: a different source file below a breakpoint
+ * (hero_mobile vs hero_desktop in asset-manifest.json), each in AVIF + WebP.
+ */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  desktop: ImageMetadata;
+  mobile: ImageMetadata;
+  /** media query that selects the mobile file */
+  mobileMedia?: string;
+  desktopWidths: number[];
+  mobileWidths: number[];
+  desktopSizes: string;
+  mobileSizes: string;
+  alt: string;
+  class?: string;
+  pictureClass?: string;
+  priority?: boolean;
+  quality?: number;
+}
+
+const {
+  desktop,
+  mobile,
+  mobileMedia = '(max-width: 767px)',
+  desktopWidths,
+  mobileWidths,
+  desktopSizes,
+  mobileSizes,
+  alt,
+  class: className,
+  pictureClass,
+  priority = false,
+  quality = 76,
+} = Astro.props;
+
+const clamp = (img: ImageMetadata, ws: number[]) =>
+  [...new Set(ws.map((w) => Math.min(w, img.width)))].sort((a, b) => a - b);
+
+const build = async (img: ImageMetadata, ws: number[], format: 'avif' | 'webp') =>
+  getImage({ src: img, widths: clamp(img, ws), format, quality });
+
+const [mAvif, mWebp, dAvif, dWebp] = await Promise.all([
+  build(mobile, mobileWidths, 'avif'),
+  build(mobile, mobileWidths, 'webp'),
+  build(desktop, desktopWidths, 'avif'),
+  build(desktop, desktopWidths, 'webp'),
+]);
+---
+
+<picture class={pictureClass}>
+  <source media={mobileMedia} type="image/avif" srcset={mAvif.srcSet.attribute} sizes={mobileSizes} />
+  <source media={mobileMedia} type="image/webp" srcset={mWebp.srcSet.attribute} sizes={mobileSizes} />
+  <source type="image/avif" srcset={dAvif.srcSet.attribute} sizes={desktopSizes} />
+  <img
+    class={className}
+    src={dWebp.src}
+    srcset={dWebp.srcSet.attribute}
+    sizes={desktopSizes}
+    width={desktop.width}
+    height={desktop.height}
+    alt={alt}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+    fetchpriority={priority ? 'high' : 'auto'}
+  />
+</picture>

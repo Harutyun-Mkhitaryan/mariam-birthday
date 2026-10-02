@@ -1,0 +1,31 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, footer } from '../data/site';
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <Logo flourish={false} size={56} mobileSize={44} class="site-footer__logo" />
+
+    <nav class="site-footer__nav" aria-label="Footer">
+      <ul role="list">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <p class="site-footer__credit">
+      <span>{footer.credit[0]}</span>
+      <span class="site-footer__for">
+        {footer.credit[1]}
+        <Icon name="heart" size={13} strokeWidth={1.6} />
+      </span>
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,146 @@
+---
+/**
+ * Button / Primary · Button / Secondary · (Pressed state) — 07-Components/Components-Board.svg
+ * Renders an <a> when `href` is set, otherwise a <button>.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary';
+  size?: 'md' | 'sm';
+  arrow?: boolean;
+  class?: string;
+  type?: 'button' | 'submit';
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  arrow = true,
+  class: className,
+  type = 'button',
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, className]}
+  href={href}
+  type={href ? undefined : type}
+  {...rest}
+>
+  <span class="btn__label"><slot /></span>
+  {arrow && <Icon name="arrow-right" size={14} strokeWidth={1.6} class="btn__icon" />}
+</Tag>
+
+<style>
+  .btn {
+    --btn-h: 50px;
+    --btn-min: 186px;
+    --btn-fs: var(--fs-button);
+    --btn-ls: 0.11em;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: var(--btn-min);
+    height: var(--btn-h);
+    padding: 0 28px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ui);
+    font-size: var(--btn-fs);
+    font-weight: 700;
+    letter-spacing: var(--btn-ls);
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition:
+      transform var(--dur-hover) var(--ease-soft),
+      box-shadow var(--dur-hover) var(--ease-soft),
+      background-color var(--dur-hover) var(--ease-soft),
+      border-color var(--dur-hover) var(--ease-soft),
+      color var(--dur-hover) var(--ease-soft);
+    -webkit-tap-highlight-color: transparent;
+  }
+  :global(.btn__icon) {
+    flex: none;
+    transition: transform var(--dur-hover) var(--ease-soft);
+  }
+
+  .btn--primary {
+    background: var(--color-champagne);
+    color: var(--color-bg);
+  }
+  .btn--secondary {
+    background: transparent;
+    color: var(--color-champagne);
+    border-color: var(--color-gold);
+  }
+
+  .btn--sm {
+    --btn-h: 34px;
+    --btn-min: 132px;
+    --btn-fs: 0.625rem; /* 10 */
+    --btn-ls: 0.1em;
+    padding: 0 18px;
+    gap: 6px;
+  }
+
+  @media (hover: hover) {
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-gold);
+    }
+    .btn:hover :global(.btn__icon) {
+      transform: translateX(2px);
+    }
+    .btn--primary:hover {
+      background: #ecd0b0;
+    }
+    .btn--secondary:hover {
+      border-color: var(--color-champagne);
+      color: var(--color-ivory);
+      background: rgba(199, 137, 73, 0.08);
+    }
+  }
+
+  /* Pressed — Components board: brown fill, ivory label */
+  .btn:active {
+    transform: translateY(0);
+    background: var(--color-brown);
+    border-color: var(--color-brown);
+    color: var(--color-ivory);
+    box-shadow: none;
+  }
+
+  .btn:focus-visible {
+    outline: 1px solid var(--color-champagne);
+    outline-offset: 4px;
+    box-shadow: var(--glow-gold);
+  }
+
+  @media (max-width: 767px) {
+    .btn--md {
+      --btn-h: 48px;
+      --btn-min: 180px;
+      --btn-fs: 0.625rem;
+      --btn-ls: 0.1em;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn:hover,
+    .btn:hover :global(.btn__icon) {
+      transform: none;
+    }
+  }
+</style>

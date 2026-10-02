@@ -1,0 +1,102 @@
+/* ─────────────────────────────────────────────────────────────
+   Motion system — 11-Animation-Spec/Animation-Spec.md
+   Everything is progressive: without JS (no .js on <html>) all
+   content is simply visible.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Page intro (hero) ─────────────────────────────────────── */
+.js [data-intro] {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity var(--dur-reveal) var(--ease-cinematic),
+    transform var(--dur-reveal) var(--ease-cinematic);
+  transition-delay: calc(200ms + var(--i, 0) * var(--stagger-title));
+}
+.js.is-loaded [data-intro] {
+  opacity: 1;
+  transform: none;
+}
+
+/* "Mariam" script — left-to-right clip-path reveal, 900 ms */
+.js [data-intro-mask] {
+  clip-path: inset(-25% 100% -35% -8%);
+  transition: clip-path var(--dur-mask) var(--ease-cinematic);
+  transition-delay: calc(200ms + var(--i, 0) * var(--stagger-title));
+}
+.js.is-loaded [data-intro-mask] {
+  clip-path: inset(-25% -8% -35% -8%);
+}
+
+/* Background fade 0 → 1, 800 ms */
+.js [data-intro-bg] {
+  opacity: 0;
+  transition: opacity var(--dur-hero) var(--ease-soft);
+}
+.js.is-loaded [data-intro-bg] {
+  opacity: 1;
+}
+
+/* ── Scroll reveals ────────────────────────────────────────── */
+.js [data-reveal-group] [data-reveal] {
+  --reveal-delay: calc(var(--i, 0) * var(--stagger, var(--stagger-title)));
+  opacity: 0;
+  transition:
+    opacity var(--dur-reveal) var(--ease-cinematic),
+    transform var(--dur-reveal) var(--ease-cinematic),
+    clip-path var(--dur-mask) var(--ease-cinematic);
+  transition-delay: var(--reveal-delay);
+}
+
+.js [data-reveal-group] [data-reveal='up'] {
+  transform: translate3d(0, 16px, 0);
+}
+.js [data-reveal-group] [data-reveal='line'] {
+  transform: translate3d(0, 0.35em, 0);
+}
+.js [data-reveal-group] [data-reveal='card'] {
+  transform: scale(0.985);
+  transition-duration: var(--dur-card);
+}
+.js [data-reveal-group] [data-reveal='rule'] {
+  opacity: 1;
+  transform: scaleX(0);
+}
+.js [data-reveal-group] [data-reveal='mask'] {
+  opacity: 1;
+  clip-path: inset(-30% 100% -40% -6%);
+}
+.js [data-reveal-group] [data-reveal='bg'] {
+  transition-duration: 1200ms;
+}
+
+.js [data-reveal-group].is-inview [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+.js [data-reveal-group].is-inview [data-reveal='mask'] {
+  clip-path: inset(-30% -6% -40% -6%);
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js [data-intro],
+  .js [data-reveal-group] [data-reveal] {
+    transform: none !important;
+    transition-delay: 0ms !important;
+  }
+  .js [data-intro-mask],
+  .js [data-reveal-group] [data-reveal='mask'] {
+    clip-path: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: min(var(--dur-reveal), 150ms);
+  }
+}

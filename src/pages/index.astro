@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import LetterSection from '../components/LetterSection.astro';
+import VideoSection from '../components/VideoSection.astro';
+import MemoriesSection from '../components/MemoriesSection.astro';
+import FinalWishes from '../components/FinalWishes.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout>
+  <Header />
+  <main id="main" tabindex="-1">
+    <Hero />
+    <LetterSection />
+    <VideoSection />
+    <MemoriesSection />
+    <FinalWishes />
+  </main>
+  <Footer />
+</BaseLayout>

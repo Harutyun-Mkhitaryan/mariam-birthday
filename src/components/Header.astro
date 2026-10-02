@@ -1,0 +1,83 @@
+---
+import Logo from './Logo.astro';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import Img from './Img.astro';
+import { nav, sendWishesHref } from '../data/site';
+import corner from '../assets/decor/champagne-corner.png';
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <Logo class="site-header__logo" />
+
+    <nav class="site-nav" aria-label="Main">
+      <ul class="site-nav__list" role="list">
+        {
+          nav.map((item) => (
+            <li>
+              <a class="site-nav__link" href={item.href} data-nav-link={item.id}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <Button href={sendWishesHref} variant="secondary" size="sm" class="site-nav__cta">Send wishes</Button>
+    </nav>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      data-menu-open
+    >
+      <span class="sr-only">Open menu</span>
+      <svg class="menu-toggle__icon" width="28" height="20" viewBox="0 0 28 20" aria-hidden="true" focusable="false">
+        <path d="M0 1h28M0 10h28M0 19h28" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<dialog class="mobile-menu" id="mobile-menu" aria-label="Menu" data-menu>
+  <div class="mobile-menu__decor decor" aria-hidden="true">
+    <Img src={corner} alt="" alpha widths={[400, 780]} sizes="300px" quality={60} />
+  </div>
+  <div class="mobile-menu__bar">
+    <Logo flourish={false} />
+    <button class="mobile-menu__close" type="button" data-menu-close>
+      <span class="sr-only">Close menu</span>
+      <Icon name="close" size={28} strokeWidth={1.2} />
+    </button>
+  </div>
+  <nav class="mobile-menu__nav" aria-label="Mobile">
+    <ol class="mobile-menu__list" role="list">
+      {
+        nav.map((item, i) => (
+          <li class="mobile-menu__item" style={`--i:${i}`}>
+            <a class="mobile-menu__link" href={item.href} data-menu-link data-nav-link={item.id}>
+              <span class="mobile-menu__num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span>{item.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+  <div class="mobile-menu__footer" style={`--i:${nav.length}`}>
+    <Button href={sendWishesHref} data-menu-link>Send wishes</Button>
+    <p class="mobile-menu__credit">
+      Made with love for Mariam <Icon name="heart" size={14} strokeWidth={1.6} />
+    </p>
+  </div>
+</dialog>
+
+<script>
+  import { initHeader } from '../scripts/header';
+  initHeader();
+</script>

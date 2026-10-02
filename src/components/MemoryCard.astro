@@ -1,0 +1,65 @@
+---
+/** Memory card — Components board "MEMORY CARD": photo, 1px gold hairline, opens the lightbox. */
+import { getImage } from 'astro:assets';
+import Img from './Img.astro';
+import type { Memory } from '../data/memories';
+
+interface Props {
+  memory: Memory;
+  index: number;
+  total: number;
+  stagger: number;
+}
+const { memory, index, total, stagger } = Astro.props;
+
+// Large renditions for the lightbox (loaded only when opened).
+const fullWidths = [720, 1122].map((w) => Math.min(w, memory.image.width));
+const [avif, webp] = await Promise.all(
+  (['avif', 'webp'] as const).map((format) =>
+    getImage({ src: memory.image, widths: fullWidths, format, quality: 78 }),
+  ),
+);
+const fullSizes = '(min-width: 768px) min(78vh * 0.8, 900px), 92vw';
+
+const focus = memory.focus ?? '50% 50%';
+const style = [
+  `--d-col:${memory.desktop.col}`,
+  `--d-row:${memory.desktop.row}`,
+  `--m-span:${memory.mobile.span}`,
+  `--m-ratio:${memory.mobile.ratio}`,
+  `--focus:${focus}`,
+  `--focus-m:${memory.focusMobile ?? focus}`,
+  `--i:${stagger}`,
+].join(';');
+
+// Card renditions: the full-width panorama needs more pixels than the grid cards.
+const cardWidths = memory.wide ? [540, 860, 1122] : [360, 540, 720];
+const cardSizes = memory.wide
+  ? '(min-width: 1440px) 860px, (min-width: 1200px) 60vw, (min-width: 768px) 88vw, 92vw'
+  : `(min-width: 1440px) 300px, (min-width: 1024px) 21vw, (min-width: 768px) 32vw, ${memory.mobile.span === 2 ? '92vw' : '46vw'}`;
+---
+
+<li class="memory" style={style} data-reveal="up">
+  <button
+    class="memory__btn"
+    type="button"
+    data-lightbox-open
+    data-index={index}
+    data-full-avif={avif.srcSet.attribute}
+    data-full-webp={webp.srcSet.attribute}
+    data-full-src={webp.src}
+    data-full-sizes={fullSizes}
+    data-alt={memory.alt}
+    data-caption={memory.caption}
+    aria-haspopup="dialog"
+    aria-label={`${memory.caption} — open memory ${index + 1} of ${total}`}
+  >
+    <Img
+      src={memory.image}
+      alt={memory.alt}
+      widths={cardWidths}
+      sizes={cardSizes}
+      class="memory__img"
+    />
+  </button>
+</li>

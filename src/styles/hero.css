@@ -1,0 +1,263 @@
+/* ─────────────────────────────────────────────────────────────
+   Hero — desktop frame 1440 × 772 (y 88 → 860), mobile 390 × 720
+   Vertical metrics are solved from the mockup baselines.
+   ───────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--header-h);
+  min-height: 772px;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+/* bouquet photograph: x 510 → 1440, full height, xMidYMid slice */
+.hero__media {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: max(35.4%, calc(50% - 210px));
+}
+.hero__parallax {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.hero__picture,
+.hero__img {
+  width: 100%;
+  height: 100%;
+}
+.hero__img {
+  object-fit: cover;
+  object-position: 50% 50%;
+  transform-origin: 58% 45%;
+  animation: hero-zoom 16s ease-in-out infinite alternate;
+}
+@keyframes hero-zoom {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.055); }
+}
+
+/* heroMask — left → right: 1 → .9 (48%) → .12 */
+.hero__mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 8, 6, 1) 0%,
+    rgba(11, 8, 6, 0.9) 48%,
+    rgba(11, 8, 6, 0.12) 100%
+  );
+}
+
+/* golden shimmer overlay at 18 % — drifts gently between .08 and .18 */
+.hero__sparkle {
+  position: absolute;
+  inset: -3%;
+  opacity: 0.18;
+}
+.hero__sparkle img {
+  object-fit: cover;
+  animation: sparkle-drift 14s ease-in-out infinite alternate;
+}
+@keyframes sparkle-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+  50% { opacity: 0.45; }
+  100% { transform: translate3d(-1.5%, -1.2%, 0) scale(1.03); opacity: 0.8; }
+}
+
+/* ── Content ───────────────────────────────────────────────── */
+.hero__inner {
+  position: relative;
+  max-width: var(--frame-max);
+  margin-inline: auto;
+  padding: 114px 24px 12px clamp(24px, 7.64vw, 110px);
+}
+
+.hero__eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--color-champagne);
+}
+.hero__eyebrow span {
+  display: block;
+}
+
+.hero__title {
+  margin-top: 46px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--color-ivory);
+}
+.hero__line {
+  display: block;
+  font-size: var(--fs-hero);
+  line-height: 0.955; /* 84 / 88 */
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.hero__name {
+  display: block;
+  width: fit-content;
+  margin-top: 18px;
+  margin-left: -5px; /* script sits 5px left of the serif lines (x 105 vs 110) */
+  padding-right: 0.12em;
+  font-family: var(--font-script);
+  font-size: var(--fs-hero-script);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-gold);
+  text-shadow: 0 0 34px rgba(199, 137, 73, 0.18);
+}
+
+.hero__intro {
+  margin-top: 13px;
+  max-width: 30em;
+  font-family: var(--font-display);
+  font-size: var(--fs-lead);
+  line-height: 1.476; /* 31 / 21 */
+  color: var(--color-ivory);
+}
+
+.hero__actions {
+  margin-top: 45px;
+}
+
+/* 01 Letter · 02 Video · 03 Memories · 04 Wishes */
+.hero__index {
+  margin-top: 34px;
+  width: 405px;
+  max-width: 100%;
+  border-top: 1px solid var(--color-line);
+}
+.hero__index ol {
+  display: grid;
+  grid-template-columns: 112px 112px 122px auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hero__index a {
+  display: inline-grid;
+  gap: 5px;
+  padding-top: 13px;
+  text-decoration: none;
+}
+.hero__index-n {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 24px;
+  color: var(--color-ivory);
+  transition: color var(--dur-hover) var(--ease-soft);
+}
+.hero__index-l {
+  font-family: var(--font-ui);
+  font-size: 0.625rem;
+  line-height: 14px;
+  color: var(--color-textMuted);
+  transition: color var(--dur-hover) var(--ease-soft);
+}
+.hero__index a:hover .hero__index-n {
+  color: var(--color-champagne);
+}
+.hero__index a:hover .hero__index-l {
+  color: var(--color-gold);
+}
+
+/* ── Tablet ────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .hero {
+    min-height: 720px;
+  }
+  .hero__media {
+    left: 28%;
+  }
+  .hero__mask {
+    background: linear-gradient(
+      90deg,
+      rgba(11, 8, 6, 1) 0%,
+      rgba(11, 8, 6, 0.88) 45%,
+      rgba(11, 8, 6, 0.18) 100%
+    );
+  }
+  .hero__inner {
+    padding-top: 104px;
+    padding-left: 48px;
+  }
+}
+
+/* ── Mobile (390 frame) ────────────────────────────────────── */
+@media (max-width: 767px) {
+  .hero {
+    min-height: 720px;
+  }
+  .hero__media {
+    left: 0;
+  }
+  /* mh — top → bottom: .18 → .74 (68%) → .92 */
+  .hero__mask {
+    background: linear-gradient(
+      180deg,
+      rgba(11, 8, 6, 0.18) 0%,
+      rgba(11, 8, 6, 0.74) 68%,
+      rgba(11, 8, 6, 0.92) 100%
+    );
+  }
+  .hero__sparkle {
+    display: none;
+  }
+  .hero__inner {
+    padding: 135px 20px 72px;
+    text-align: center;
+  }
+  .hero__eyebrow {
+    line-height: 22px;
+    letter-spacing: 3px;
+  }
+  .hero__title {
+    margin-top: 41px;
+  }
+  .hero__line {
+    line-height: 0.98; /* 51 / 52 */
+  }
+  .hero__name {
+    margin: 19px auto 0;
+    padding-right: 0;
+  }
+  .hero__intro {
+    margin: 32px auto 0;
+    max-width: 14em;
+    line-height: 1.5; /* 24 / 16 */
+  }
+  .hero__actions {
+    margin-top: 48px;
+  }
+  .hero__index {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__img,
+  .hero__sparkle img {
+    animation: none;
+  }
+  .hero__img {
+    transform: scale(1.02);
+  }
+  .hero__parallax {
+    transform: none !important;
+  }
+}

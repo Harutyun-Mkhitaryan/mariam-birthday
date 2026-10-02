@@ -1,0 +1,60 @@
+---
+import SectionTitle from './SectionTitle.astro';
+import Img from './Img.astro';
+import { letterSection } from '../data/site';
+import { letterLines, typewriter } from '../data/letter';
+import paper from '../assets/backgrounds/letter-paper.png';
+import corner from '../assets/decor/champagne-corner.png';
+
+const [greeting, ...body] = letterLines;
+---
+
+<section class="letter" id="letter" aria-labelledby="letter-title">
+  <div class="letter__corner decor" aria-hidden="true">
+    <Img src={corner} alt="" alpha widths={[400, 780]} sizes="(max-width: 767px) 220px, 390px" quality={60} />
+  </div>
+
+  <div class="frame letter__frame" data-reveal-group>
+    <SectionTitle id="letter-title" lines={letterSection.titleLines} eyebrow={letterSection.eyebrow} class="letter__head" />
+
+    <div class="letter__stage" data-reveal="card" style="--i:1">
+      <div class="letter__canvas">
+        <Img
+          src={paper}
+          alt=""
+          widths={[1024, 1400, 1672]}
+          sizes="(max-width: 767px) 1400px, (max-width: 1199px) 1550px, 1340px"
+          quality={80}
+          class="letter__photo"
+        />
+
+        <div class="letter__paper">
+          <div
+            class="letter__text"
+            lang="hy"
+            data-typewriter
+            data-char-delay={typewriter.charDelay}
+            data-jitter={typewriter.jitter}
+            data-greeting-pause={typewriter.greetingPause}
+            data-line-pause={typewriter.linePause}
+            data-comma-pause={typewriter.commaPause}
+          >
+            <p class="letter__greeting">{greeting}</p>
+            {body.map((line) => <p class="letter__line">{line}</p>)}
+          </div>
+          <script is:inline type="application/json" data-letter-source set:html={JSON.stringify(letterLines)} />
+        </div>
+      </div>
+    </div>
+
+    <div class="letter__controls" data-reveal="up" style="--i:3">
+      <button class="letter__control" type="button" data-typewriter-skip hidden>Show the whole letter</button>
+      <button class="letter__control" type="button" data-typewriter-replay hidden>Type it again</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initTypewriter } from '../scripts/typewriter';
+  initTypewriter();
+</script>

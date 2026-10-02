@@ -1,0 +1,88 @@
+---
+import SectionTitle from './SectionTitle.astro';
+import MemoryCard from './MemoryCard.astro';
+import Img from './Img.astro';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { memoriesSection } from '../data/site';
+import { memories } from '../data/memories';
+import branch from '../assets/decor/floral-branch.png';
+
+const featured = memories.filter((m) => m.featured);
+const more = memories.filter((m) => !m.featured);
+const total = memories.length;
+---
+
+<section class="memories" id="memories" aria-labelledby="memories-title">
+  <div class="frame memories__frame" data-reveal-group>
+    <SectionTitle
+      id="memories-title"
+      lines={memoriesSection.titleLines}
+      eyebrow={memoriesSection.eyebrow}
+      class="memories__head"
+    />
+
+    <div class="memories__body">
+      <ul class="memories__grid" role="list" aria-label="Memories">
+        {featured.map((m, i) => <MemoryCard memory={m} index={memories.indexOf(m)} total={total} stagger={i} />)}
+      </ul>
+
+      <div class="memories__more" id="memories-more" hidden data-gallery-more>
+        <ul class="memories__grid memories__grid--more" role="list" aria-label="More memories">
+          {more.map((m, i) => <MemoryCard memory={m} index={memories.indexOf(m)} total={total} stagger={i} />)}
+        </ul>
+      </div>
+
+      <div class="memories__actions" data-reveal="up" style="--i:6">
+        <Button
+          variant="secondary"
+          class="memories__toggle"
+          aria-expanded="false"
+          aria-controls="memories-more"
+          data-gallery-toggle
+          data-label-more={memoriesSection.moreLabel}
+          data-label-less={memoriesSection.lessLabel}
+        >
+          {memoriesSection.moreLabel}
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <div class="memories__branch decor" aria-hidden="true">
+    <Img src={branch} alt="" alpha widths={[300, 520]} sizes="(max-width: 767px) 180px, 260px" quality={60} />
+  </div>
+
+  <dialog class="lightbox" aria-label="Memory viewer" data-lightbox>
+    <div class="lightbox__bar">
+      <p class="lightbox__count" aria-live="polite"><span data-lightbox-index>01</span> / {String(total).padStart(2, '0')}</p>
+      <button class="lightbox__close" type="button" data-lightbox-close>
+        <span class="sr-only">Close</span>
+        <Icon name="close" size={26} strokeWidth={1.2} />
+      </button>
+    </div>
+    <figure class="lightbox__figure">
+      <div class="lightbox__media">
+        <picture data-lightbox-picture>
+          <source type="image/avif" data-lightbox-avif />
+          <source type="image/webp" data-lightbox-webp />
+          <img class="lightbox__img" alt="" data-lightbox-img />
+        </picture>
+      </div>
+      <figcaption class="lightbox__caption" data-lightbox-caption></figcaption>
+    </figure>
+    <button class="lightbox__nav lightbox__nav--prev" type="button" data-lightbox-prev>
+      <span class="sr-only">Previous memory</span>
+      <Icon name="chevron-left" size={30} strokeWidth={1.2} />
+    </button>
+    <button class="lightbox__nav lightbox__nav--next" type="button" data-lightbox-next>
+      <span class="sr-only">Next memory</span>
+      <Icon name="chevron-right" size={30} strokeWidth={1.2} />
+    </button>
+  </dialog>
+</section>
+
+<script>
+  import { initGallery } from '../scripts/gallery';
+  initGallery();
+</script>

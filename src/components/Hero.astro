@@ -1,0 +1,80 @@
+---
+import ArtPicture from './ArtPicture.astro';
+import Img from './Img.astro';
+import Button from './Button.astro';
+import { hero, sendWishesHref } from '../data/site';
+import heroDesktop from '../assets/hero/hero-desktop.png';
+import heroMobile from '../assets/hero/hero-mobile.png';
+import sparkle from '../assets/decor/sparkle.png';
+---
+
+<section class="hero" id="home" aria-labelledby="hero-title">
+  <div class="hero__bg" data-intro-bg>
+  <div class="hero__media">
+    <div class="hero__parallax" data-parallax="0.08">
+      <ArtPicture
+        desktop={heroDesktop}
+        mobile={heroMobile}
+        desktopWidths={[720, 1024, 1448]}
+        mobileWidths={[960, 1280, 1672]}
+        desktopSizes="(min-width: 1024px) 65vw, 100vw"
+        mobileSizes="1280px"
+        alt="A lavish bouquet of cream roses and blossoms wrapped in dark paper and bronze satin ribbon, with a “Happy Birthday Mariam” card, glowing among candles."
+        class="hero__img"
+        pictureClass="hero__picture"
+        priority
+      />
+    </div>
+  </div>
+  <div class="hero__mask" aria-hidden="true"></div>
+  <div class="hero__sparkle decor" aria-hidden="true">
+    <Img src={sparkle} alt="" alpha widths={[800, 1280]} sizes="100vw" quality={42} />
+  </div>
+  </div>
+
+  <div class="hero__inner">
+    <p class="hero__eyebrow" data-intro style="--i:0">
+      {hero.eyebrow.map((l) => <span>{l}</span>)}
+    </p>
+
+    <h1 class="hero__title" id="hero-title">
+      {
+        hero.titleLines.map((line, i) => (
+          <span class="hero__line" data-intro style={`--i:${i + 1}`}>
+            {line}
+          </span>
+        ))
+      }
+      <span class="hero__name" data-intro-mask style={`--i:${hero.titleLines.length + 1}`}>{hero.name}</span>
+    </h1>
+
+    <p class="hero__intro" data-intro style="--i:4">
+      May your day be as beautiful,<br />
+      inspiring and special as the art you&nbsp;create.
+    </p>
+
+    <div class="hero__actions" data-intro style="--i:5">
+      <Button href={sendWishesHref} class="hero__cta">{hero.cta}</Button>
+    </div>
+
+    <nav class="hero__index" aria-label="Sections" data-intro style="--i:6">
+      <ol role="list">
+        {
+          hero.index.map((item) => (
+            <li>
+              <a href={item.href}>
+                <span class="hero__index-n">{item.n}</span>
+                <span class="hero__index-l">{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<script>
+  import { initHero } from '../scripts/hero';
+  initHero();
+</script>

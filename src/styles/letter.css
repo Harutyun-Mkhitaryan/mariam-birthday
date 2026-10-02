@@ -1,0 +1,303 @@
+/* ─────────────────────────────────────────────────────────────
+   Letter — desktop section 1440 × 760 (frame 1336 × 664, letter photo 930 × 600)
+   The photo is shown through a "view window" expressed in source pixels
+   (letter-paper.png is 1672 × 941) so the HTML text can be pinned to the
+   paper sheet at every breakpoint.
+   ───────────────────────────────────────────────────────────── */
+.letter {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--frame-inset-y);
+  background: linear-gradient(180deg, var(--color-bgSoft) 0%, var(--color-bg) 100%);
+  overflow: hidden;
+}
+
+.letter__corner {
+  position: absolute;
+  top: 0;
+  left: max(0px, calc(50% - 720px));
+  z-index: -1;
+  width: 390px;
+  height: 390px;
+  opacity: 0.22;
+}
+
+.letter__frame {
+  display: grid;
+  grid-template-columns: minmax(0, 314fr) minmax(0, 930fr);
+  grid-template-rows: auto 1fr;
+  padding: 30px 58px 34px 34px;
+}
+
+.letter__head {
+  grid-column: 1;
+  grid-row: 1;
+  padding-top: 7px;
+}
+
+.letter__controls {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding-right: 24px;
+}
+.letter__control {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0;
+  font-family: var(--font-ui);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  transition: color var(--dur-hover) var(--ease-soft);
+}
+.letter__control::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  transition: width 300ms var(--ease-cinematic);
+}
+.letter__control:hover {
+  color: var(--color-champagne);
+}
+.letter__control:hover::before {
+  width: 40px;
+}
+.letter__control[hidden] {
+  display: none;
+}
+
+/* ── Stage / view window ───────────────────────────────────── */
+.letter__stage {
+  /* view window in source px (defaults = desktop ≥1200) */
+  --view-w: 1162;
+  --view-h: 750;
+  --view-cx: 818;
+  --view-cy: 440;
+  /* text block on the sheet, source px (centre, size), angle, font size */
+  --paper-cx: 918;
+  --paper-cy: 392;
+  --paper-w: 630;
+  --paper-h: 420;
+  --paper-rot: -5.2deg;
+  --ink-size: 20.4;
+
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--view-w) / var(--view-h);
+  overflow: hidden;
+  background: #2a1a10;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+
+.letter__canvas {
+  position: absolute;
+  width: calc(1672 / var(--view-w) * 100%);
+  aspect-ratio: 1672 / 941;
+  left: calc((var(--view-w) / 2 - var(--view-cx)) / var(--view-w) * 100%);
+  top: calc((var(--view-h) / 2 - var(--view-cy)) / var(--view-h) * 100%);
+  container-type: inline-size;
+}
+.letter__canvas picture,
+.letter__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.letter__paper {
+  position: absolute;
+  left: calc((var(--paper-cx) - var(--paper-w) / 2) / 1672 * 100%);
+  top: calc((var(--paper-cy) - var(--paper-h) / 2) / 941 * 100%);
+  width: calc(var(--paper-w) / 1672 * 100%);
+  height: calc(var(--paper-h) / 941 * 100%);
+  transform: rotate(var(--paper-rot));
+  transform-origin: 50% 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── Ink ───────────────────────────────────────────────────── */
+.letter__text {
+  position: relative;
+  font-family: var(--font-letter);
+  font-size: calc(var(--ink-size) / 1672 * 100cqi);
+  font-weight: 400;
+  line-height: 1.62;
+  color: var(--color-paperInk);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  hyphens: none;
+  /* printed into the fibres rather than floating on top */
+  mix-blend-mode: multiply;
+  text-shadow: 0 0 0.6px rgba(80, 55, 41, 0.55);
+  font-kerning: normal;
+}
+.letter__text p + p {
+  margin-top: 0.34em;
+}
+.letter__greeting {
+  font-size: 1.14em;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  margin-bottom: 0.42em;
+}
+
+/* typed layer */
+.tw-word {
+  white-space: nowrap;
+}
+.letter__text.is-armed .tw-c {
+  opacity: 0;
+}
+.letter__text.is-armed .tw-c.is-typed {
+  opacity: 1;
+  transition: opacity 110ms linear;
+}
+.tw-caret {
+  position: relative;
+}
+.tw-caret::after {
+  content: '';
+  position: absolute;
+  left: 0.06em;
+  bottom: -0.28em;
+  width: max(1.5px, 0.09em);
+  height: 1.32em;
+  background: currentColor;
+  opacity: 0.85;
+  animation: caret-blink 600ms step-end infinite;
+}
+.letter__text.is-typing .tw-caret::after {
+  animation-play-state: paused; /* solid while the keys are moving */
+}
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}
+
+/* The view window tightens as the stage narrows so the ink never drops
+   below ~16 px on desktop / tablet (verified 320 → 2560 px, no overflow). */
+@media (max-width: 1439px) {
+  .letter__stage {
+    --view-w: 1040;
+    --view-h: 671;
+    --view-cx: 870;
+    --view-cy: 410;
+  }
+}
+@media (max-width: 1299px) {
+  .letter__stage {
+    --view-w: 940;
+    --view-h: 606;
+    --view-cx: 905;
+    --view-cy: 400;
+  }
+}
+
+/* ── Mid widths (768 – 1199): title above the letter ──────── */
+@media (max-width: 1199px) {
+  .letter__frame {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    row-gap: 36px;
+    padding: 48px max(28px, calc((100% - 820px) / 2)) 40px;
+  }
+  .letter__head {
+    padding-top: 0;
+  }
+  .letter__stage {
+    grid-column: 1;
+    grid-row: 2;
+    --view-w: 890;
+    --view-h: 650;
+    --view-cx: 912;
+    --view-cy: 400;
+  }
+  .letter__controls {
+    grid-row: 3;
+    align-self: start;
+    align-items: center;
+    margin-top: -16px;
+    padding-right: 0;
+  }
+}
+@media (max-width: 1023px) {
+  .letter__stage {
+    --view-w: 800;
+    --view-h: 585;
+    --view-cx: 918;
+    --view-cy: 400;
+  }
+}
+
+/* ── Mobile (390 frame): portrait crop, 350 × 700 ──────────── */
+@media (max-width: 767px) {
+  .letter {
+    padding-block: 58px 56px;
+    background: var(--color-surface);
+  }
+  .letter__corner {
+    display: none;
+  }
+  .letter__frame {
+    width: 100%;
+    border: 0;
+    /* 20 px gutters at 390, never below 16 px */
+    padding: 0 clamp(16px, calc((100vw - 320px) * 0.2857), var(--frame-inset-x));
+    row-gap: 47px;
+  }
+  .letter__head {
+    text-align: center;
+  }
+  .letter__stage {
+    max-width: 440px;
+    margin-inline: auto;
+    /* 350 × 615 frame from the 390 mockup */
+    --view-w: 430;
+    --view-h: 755.6;
+    --view-cx: 902;
+    --view-cy: 446;
+    --paper-cx: 906;
+    --paper-cy: 418;
+    --paper-w: 388;
+    --paper-h: 500;
+    --paper-rot: -3deg;
+    --ink-size: 18;
+  }
+  .letter__text {
+    line-height: 1.56;
+  }
+  .letter__text p + p {
+    margin-top: 0.3em;
+  }
+  .letter__greeting {
+    font-size: 1.07em;
+    margin-bottom: 0.3em;
+  }
+  .letter__controls {
+    margin-top: -24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tw-caret::after {
+    animation: none;
+  }
+  /* the letter is shown complete — nothing to skip or replay */
+  .letter__controls {
+    display: none;
+  }
+}

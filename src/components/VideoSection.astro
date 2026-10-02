@@ -1,0 +1,124 @@
+---
+import SectionTitle from './SectionTitle.astro';
+import Img from './Img.astro';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { getImage } from 'astro:assets';
+import { video, videoSection } from '../data/site';
+import poster from '../assets/backgrounds/video-poster.png';
+import petals from '../assets/decor/petals.png';
+import firstFrame from '../assets/video/film-first-frame.png';
+
+// The modal player shows the film's own first frame while it loads, so there is no
+// jump from the section poster to a different picture when playback starts.
+const posterForPlayer = await getImage({
+  src: video.src ? firstFrame : poster,
+  width: 1280,
+  format: 'webp',
+  quality: 76,
+});
+
+// Site-relative paths ("/video/…") must respect the deploy base (e.g. /repo-name/ on GitHub Pages).
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const withBase = (p: string) => (p.startsWith('/') ? `${base}${p}` : p);
+const videoSrc = video.src ? withBase(video.src) : '';
+const videoLite = video.srcLite ? withBase(video.srcLite) : '';
+const captionsSrc = video.captions ? withBase(video.captions) : '';
+---
+
+<section class="video" id="video" aria-labelledby="video-title">
+  <div class="video__inner" data-reveal-group>
+    <div class="video__copy">
+      <SectionTitle id="video-title" lines={videoSection.titleLines} class="video__head" />
+      <p class="video__text" data-reveal="up" style="--i:3">
+        {videoSection.body.map((l) => <span>{l}</span>)}
+      </p>
+      <div class="video__cta" data-reveal="up" style="--i:4">
+        {/* a plain link to the file without JS; the script upgrades it to the modal player */}
+        <Button href={videoSrc || undefined} data-video-open aria-haspopup="dialog" aria-controls="video-modal">
+          {videoSection.cta}
+        </Button>
+      </div>
+    </div>
+
+    <div class="video__stage" data-reveal="card" style="--i:1">
+      <button
+        class="video__poster"
+        type="button"
+        data-video-open
+        aria-haspopup="dialog"
+        aria-controls="video-modal"
+        aria-label="Play the birthday video greeting"
+      >
+        <Img
+          src={poster}
+          alt=""
+          widths={[640, 960, 1280, 1672]}
+          sizes="(min-width: 1024px) 1080px, (min-width: 768px) 100vw, 835px"
+          class="video__img"
+        />
+        <span class="video__overlay" aria-hidden="true"></span>
+        <span class="video__play" aria-hidden="true">
+          <svg viewBox="-55 -55 110 110" focusable="false">
+            <circle r="54" />
+            <path d="M-16 -30L28 0L-16 30z" />
+          </svg>
+        </span>
+      </button>
+      <div class="video__petals decor" aria-hidden="true">
+        <Img src={petals} alt="" alpha widths={[640, 960]} sizes="(min-width: 1024px) 1050px, 100vw" quality={40} />
+      </div>
+    </div>
+  </div>
+
+  <dialog class="video-modal" id="video-modal" aria-labelledby="video-modal-title" data-video-modal>
+    <div class="video-modal__panel">
+      <div class="video-modal__bar">
+        <p class="video-modal__title" id="video-modal-title">{video.title}</p>
+        <button class="video-modal__close" type="button" data-video-close>
+          <span class="sr-only">Close video</span>
+          <Icon name="close" size={26} strokeWidth={1.2} />
+        </button>
+      </div>
+
+      <div class:list={['video-modal__frame', !videoSrc && !video.embedUrl && 'video-modal__frame--placeholder']}>
+        {
+          videoSrc ? (
+            <video
+              class="video-modal__player"
+              controls
+              playsinline
+              preload="none"
+              poster={posterForPlayer.src}
+              data-video-player
+              data-src={videoSrc}
+              data-src-lite={videoLite || undefined}
+              data-type={video.type}
+            >
+              {captionsSrc && (
+                <track kind="captions" src={captionsSrc} srclang={video.captionsLang} label={video.captionsLabel} default />
+              )}
+              <a href={videoSrc}>Download the video</a>
+            </video>
+          ) : video.embedUrl ? (
+            <div class="video-modal__embed" data-video-embed={video.embedUrl} data-video-title={video.title} />
+          ) : (
+            <div class="video-modal__placeholder">
+              <img class="video-modal__placeholder-img" src={posterForPlayer.src} alt="" width="1280" height="720" loading="lazy" decoding="async" />
+              <div class="video-modal__placeholder-copy">
+                <Icon name="sparkle" size={28} strokeWidth={1.2} />
+                <p class="video-modal__placeholder-title">{videoSection.placeholder.title}</p>
+                <p class="video-modal__placeholder-body">{videoSection.placeholder.body}</p>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  import { initVideo } from '../scripts/video';
+  initVideo();
+</script>

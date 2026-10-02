@@ -1,0 +1,38 @@
+---
+/**
+ * Section title — Components board "SECTION TITLE":
+ * two Cormorant lines, 70 px gold rule, optional gold Montserrat eyebrow lines.
+ */
+interface Props {
+  id: string;
+  lines: readonly string[];
+  eyebrow?: readonly string[];
+  rule?: boolean;
+  class?: string;
+}
+const { id, lines, eyebrow, rule = true, class: className } = Astro.props;
+---
+
+<div class:list={['section-head', className]}>
+  <h2 class="section-title" id={id}>
+    {
+      lines.map((line, i) => (
+        <span class="section-title__mask">
+          <span class="section-title__line" data-reveal="line" style={`--i:${i}`}>
+            {line}
+          </span>
+        </span>
+      ))
+    }
+  </h2>
+  {rule && <span class="rule section-head__rule" data-reveal="rule" style={`--i:${lines.length}`} aria-hidden="true" />}
+  {
+    eyebrow && (
+      <p class="eyebrow section-head__eyebrow" data-reveal="up" style={`--i:${lines.length + 1}`}>
+        {eyebrow.map((l) => (
+          <span>{l}</span>
+        ))}
+      </p>
+    )
+  }
+</div>

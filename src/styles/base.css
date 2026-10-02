@@ -1,0 +1,215 @@
+/* ─────────────────────────────────────────────────────────────
+   Base — reset, document, shared primitives
+   ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+  background: var(--color-bg);
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-ivory);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  line-height: 1.55;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+body.is-locked {
+  overflow: hidden;
+}
+
+img,
+picture,
+svg,
+video,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+dialog {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(199, 137, 73, 0.35);
+  color: var(--color-white);
+}
+
+/* Focus — visible, warm, never removed */
+:focus-visible {
+  outline: 1px solid var(--color-champagne);
+  outline-offset: 4px;
+}
+
+/* ── Utilities ─────────────────────────────────────────────── */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  padding: 12px 20px;
+  background: var(--color-champagne);
+  color: var(--color-bg);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transform: translateY(-160%);
+  transition: transform var(--dur-hover) var(--ease-soft);
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* decorative layers never intercept pointer or AT */
+.decor {
+  pointer-events: none;
+  user-select: none;
+}
+.decor img {
+  width: 100%;
+  height: 100%;
+}
+
+/* Cover-fit media helper */
+.cover,
+.cover img {
+  width: 100%;
+  height: 100%;
+}
+.cover img {
+  object-fit: cover;
+}
+
+/* ── Text primitives ───────────────────────────────────────── */
+/* UI/Caption – Montserrat caps eyebrow lines (gold) */
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+.eyebrow > span {
+  display: block;
+}
+
+.section-title {
+  display: grid; /* keeps the line masks' negative margins from collapsing */
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1.035;
+  letter-spacing: var(--ls-h2);
+  color: var(--color-ivory);
+}
+.section-title__line {
+  display: block;
+  white-space: nowrap;
+}
+
+.rule {
+  display: block;
+  width: 70px;
+  height: 1px;
+  background: var(--color-gold);
+  transform-origin: left center;
+}
+
+/* Section frame – the 1px bronze-line border inset 52 / 48 px in the desktop mockup */
+.frame {
+  position: relative;
+  width: calc(100% - 2 * var(--frame-inset-x));
+  max-width: 1336px;
+  margin-inline: auto;
+  border: var(--hairline) solid var(--color-line);
+}
+
+:root {
+  --frame-inset-x: 52px;
+  --frame-inset-y: 48px;
+  --gutter: 20px;
+}
+@media (max-width: 1023px) {
+  :root {
+    --frame-inset-x: 32px;
+    --frame-inset-y: 40px;
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --frame-inset-x: 20px;
+  }
+}
