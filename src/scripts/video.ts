@@ -1,6 +1,6 @@
 import { animatedDialog } from './motion';
 
-type NetworkInformation = { saveData?: boolean; effectiveType?: string; downlink?: number };
+type NetworkInformation = { saveData?: boolean; effectiveType?: string };
 
 /**
  * Video greeting: poster + play button open a modal player.
@@ -21,12 +21,10 @@ export function initVideo(): void {
     const main = player?.dataset.src || '';
     const lite = player?.dataset.srcLite || '';
     if (!lite) return main;
+    // Only the browser's coarse verdict is trusted here. The raw `downlink` figure is
+    // too noisy to act on: it reported 1.6 Mbps on a line that fetched at 13 Mbps.
     const net = (navigator as Navigator & { connection?: NetworkInformation }).connection;
-    const slow =
-      !!net &&
-      (net.saveData === true ||
-        ['slow-2g', '2g', '3g'].includes(net.effectiveType || '') ||
-        (typeof net.downlink === 'number' && net.downlink > 0 && net.downlink < 4));
+    const slow = !!net && (net.saveData === true || ['slow-2g', '2g', '3g'].includes(net.effectiveType || ''));
     return slow ? lite : main;
   };
 
